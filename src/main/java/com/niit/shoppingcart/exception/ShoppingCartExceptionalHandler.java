@@ -1,4 +1,4 @@
-package com.niit.shoppingcart.exception;
+/*package com.niit.shoppingcart.exception;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -85,3 +85,4 @@ public ModelAndView handleIOException(HttpServletRequest request, Exception e)
 
 
 }
+*/

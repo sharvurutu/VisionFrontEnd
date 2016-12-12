@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>SERVER DOWN</title>
+<title>Insert title here</title>
 </head>
 <body>
-<h2></h2>
-<br>
-<br>
-<br>
 
 <div class="alert alert-danger">
-<strong>The requested server is down.
-Please contact administrator</strong></div>
-<div class="alert alert-info">${message} ${exception}</div>
+${message}
+</div>
+<div class="alert alert-info">
+${errorMessage}
+
+</div>
+
 </body>
 </html>

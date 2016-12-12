@@ -1,115 +1,109 @@
 package com.niit.shoppingcart.controller;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.List;
+
 
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.type.descriptor.java.CalendarDateTypeDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.niit.shoppingcart.dao.CartDAO;
 import com.niit.shoppingcart.dao.ProductDAO;
-import com.niit.shoppingcart.model.MyCart;
+import com.niit.shoppingcart.model.Cart;
 import com.niit.shoppingcart.model.Product;
+
 
 @Controller
 public class CartController {
-	private static Logger log = LoggerFactory.getLogger(CartController.class);
+
+	public static Logger log = LoggerFactory.getLogger(CartController.class.getName());
 
 	@Autowired
-	private CartDAO cartDAO;
+	Cart cart;
 
 	@Autowired
-	private MyCart myCart;
+	CartDAO cartDAO;
 
 	@Autowired
-	private ProductDAO productDAO;
+	Product product;
 
-	@RequestMapping(value = "/myCart", method = RequestMethod.GET)
-	public String myCart(Model model, HttpSession session) {
-		log.debug("Starting of the method myCart");
-		model.addAttribute("myCart", new MyCart());
-		String loggedInUserid = (String) session.getAttribute("loggedInUserID");
+	@Autowired
+	ProductDAO productDAO;
 
-		if (loggedInUserid == null) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			loggedInUserid = auth.getName();
-		}
-		int cartSize = cartDAO.list(loggedInUserid).size();
+	@RequestMapping(value = "/mycart")
+	public ModelAndView DisplayAllCart(HttpSession session) {
+		log.debug("CartController ---> Starting of the Method DisplayAllCart()");
 
-		if (cartSize == 0) {
-			model.addAttribute("errorMessage", "You do not have any products is your myCart");
-		} else {
-			model.addAttribute("cartList", cartDAO.list(loggedInUserid));
-			model.addAttribute("totalAmount", cartDAO.getTotalAmount(loggedInUserid));
-			model.addAttribute("displayCart", "true");
-		}
-		log.debug("Ending of the method myCart");
-		return "/index";
-	}
+		ModelAndView mv = new ModelAndView("home");
+		String userid = (String) session.getAttribute("email");
+		// List<Cart> cart = cartDAO.list(userid);
+		System.out.println(userid);
+		mv.addObject("cart", cart);
+		mv.addObject("cartlist", cartDAO.list(userid));
+		mv.addObject("TotalAmount", cartDAO.get_TotalAmount(userid));
+		mv.addObject("ShowingAllCart", "show");
 
-	/*
-	 * @RequestMapping(value = "/carts", method = RequestMethod.GET) public
-	 * String listCarts(Model model) { model.addAttribute("cart", new Cart());
-	 * model.addAttribute("cartList", this.cartDAO.list()); return "cart"; }
-	 */
-
-	// For add and update cart both
-	@RequestMapping(value = "/myCart/add/{id}", method = RequestMethod.GET)
-	public ModelAndView addToCart(@PathVariable("id") String id, HttpSession session) {
-		log.debug("Starting of the method addToCart");
-		Product product = productDAO.get(id);
-
-		myCart.setPrice(product.getPrice());
-		myCart.setProductName(product.getName());
-		String loggedInUserid = (String) session.getAttribute("loggedInUserID");
-		if (loggedInUserid == null) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			loggedInUserid = auth.getName();
-		}
-		myCart.setUserID(loggedInUserid);
-		myCart.setStatus('N');// Status is New, Once it is dispatched, we can
-								// changed to 'D'
-		myCart.setId(ThreadLocalRandom.current().nextLong(100, 1000000 + 1));
-
-		cartDAO.save(myCart);
-
-		ModelAndView mv = new ModelAndView("redirect:/home");
-		mv.addObject("successMessage", "Successfully add the product to myCart");
-		log.debug("Ending of the method addToCart");
+		log.debug("CartController --->Ending of the Method DisplayAllCart()");
 		return mv;
 
 	}
 
-	@RequestMapping("myCart/delete/{id}")
-	public String removeCart(@PathVariable("id") String id, ModelMap model) throws Exception {
-		log.debug("Starting of the method removeCart");
-		try {
-			cartDAO.delete(id);
-			model.addAttribute("message", "Successfully removed");
-		} catch (Exception e) {
-			model.addAttribute("message", e.getMessage());
-			e.printStackTrace();
+	@RequestMapping(value = "/AddToCart", method = RequestMethod.GET)
+	public String AddtoCart(@RequestParam("pid") String Id, HttpSession session, Model model) {
+		log.debug("CartController ---> Starting of the Method AddtoCart()");
+		String userloggedin = (String) session.getAttribute("email");
+		if (userloggedin == null) {
+			/*
+			 * Authentication auth =
+			 * SecurityContextHolder.getContext().getAuthentication();
+			 * userloggedin=auth.getName();
+			 */
+			
+			log.debug("CartController --->Ending of the Method AddtoCart()");
+			return "redirect:/showloginform";
 		}
-		log.debug("Ending of the method removeCart");
-		return "redirect:/index";
+		System.out.println(Id);
+		Product product = productDAO.get(Id);
+		String email = (String) session.getAttribute("email");
+		cart.setUser_Id(userloggedin);
+		cart.setStatus('N');
+		cart.setQuantity(1);
+		cart.setId(cartDAO.getMaxId());
+		cart.setProduct_Name(product.getName());
+		cartDAO.Save(cart);
+		model.addAttribute("CartAddedSuccessMessage", "Thank you! Product Has Been Added to Cart");
+		
+		log.debug("CartController --->Ending of the Method AddtoCart()");
+		return "redirect:/mycart";
 	}
 
-	/*
-	 * @RequestMapping("cart/edit/{id}") public String
-	 * editCart(@PathVariable("id") int id, Model model) {
-	 * System.out.println("editCart"); model.addAttribute("cart",
-	 * this.cartDAO.get(id)); model.addAttribute("listCarts",
-	 * this.cartDAO.list()); return "cart"; }
-	 */
+	@RequestMapping(value = "/DeleteCart", method = RequestMethod.GET)
+	public String DeleteCart(@RequestParam("cid") Integer Id, HttpSession session, Model model) {
+		log.debug("CartController ---> Starting of the Method DeleteCart()");
+		
+		cart= cartDAO.get(Id);
+		cartDAO.deleteByCartId(cart);
+		model.addAttribute("CartDeletedSuccessMessage", "Thank you! Product Has Been Deleted from CArt");
+		
+		log.debug("CartController --->Ending of the Method DeleteCart()");
+		return "redirect:/mycart";
+
+		/*
+		 * return mv;
+		 */
+
+	}
 }

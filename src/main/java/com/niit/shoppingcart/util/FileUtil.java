@@ -4,43 +4,44 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-public class FileUtil {
 
-	//private static Logger log = LoggerFactory.getLogger(FileUtil.class);
-	
-	public static void upload(String path, MultipartFile file, String fileName)
+public class FileUtil {
+	public static Logger log = LoggerFactory.getLogger(FileUtil.class.getName());
+
+	public static void Upload(String path,MultipartFile file,String filename)
 	{
-		//log.debug("Starting of the method upload");
-		//log.debug("path: "+ path);
-		//log.debug("fileName: " + fileName);
-		if(!file.isEmpty())
-		{
-			try
-			{
-				byte[] bytes =file.getBytes();
-				
-				//Creating directory to store file
+		log.debug("FileUtil ---> Starting of the Method DisplayAllCart()");
+
+		if(!file.isEmpty()){
+			
+			try{
+				byte[] bytes = file.getBytes();
 				File dir = new File(path);
 				if(!dir.exists())
+				{
 					dir.mkdirs();
-				
-				//Create the file on server
-				File serverFile = new File(dir.getAbsolutePath()+File.separator+fileName);
-				BufferedOutputStream stream=new BufferedOutputStream(new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
-				
-				//log.info("server file location="+serverFile.getAbsolutePath());
+				}
+				File ServerFile = new File(dir.getAbsolutePath()+File.separator +filename);
+
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(ServerFile));
+			stream.write(bytes);
+			stream.close();
+			log.debug("FileUtil ---> Ending of the Method DisplayAllCart()");
+
 			}
-			catch(Exception e)
+catch(Exception e)
 			{
-				e.printStackTrace();
+	e.printStackTrace();
+	System.out.println(e);
+	log.debug("FileUtil ---> Ending of the Method DisplayAllCart()");
+
 			}
-			//log.debug("Ending of the method upload");
 		}
+		
 	}
-}
+	
+	}

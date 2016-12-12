@@ -1,38 +1,31 @@
 package com.niit.shoppingcart.controller;
 
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpSession;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.niit.shoppingcart.dao.CartDAO;
-import com.niit.shoppingcart.dao.CategoryDAO;
-import com.niit.shoppingcart.dao.ProductDAO;
-import com.niit.shoppingcart.dao.SupplierDAO;
 import com.niit.shoppingcart.dao.UserDAO;
-import com.niit.shoppingcart.model.Cart;
-import com.niit.shoppingcart.model.Category;
-import com.niit.shoppingcart.model.Supplier;
+import com.niit.shoppingcart.model.Login;
 import com.niit.shoppingcart.model.User;
+
 
 
 @Controller
 public class UserController {
 	
-	Logger log = LoggerFactory.getLogger(UserController.class);
+	public static Logger log = LoggerFactory.getLogger(UserController.class.getName());
+
 	
 	@Autowired
 	UserDAO userDAO;
@@ -41,148 +34,74 @@ public class UserController {
 	User user;
 	
 	@Autowired
-	Supplier supplier;
-	
-	@Autowired
-	SupplierDAO supplierDAO;
-	
-	@Autowired
-	CategoryDAO categoryDAO;
-	
-	@Autowired
-	ProductDAO productDAO;
-	
-	@Autowired
-	Category category;
-	
-	@Autowired
-	Cart cart;
-
-	@Autowired
-	CartDAO cartDAO;
+	Login login;
 	
 
-	@RequestMapping(value = "/validate",method = RequestMethod.POST )
-	public ModelAndView login(@RequestParam(value = "username") String userID,
-	@RequestParam(value= "password") String password, HttpSession session)
-{
-	log.debug("Starting of the method login");
-	
-	ModelAndView mv= new ModelAndView("/index");
-	user=userDAO.isValidUser(userID, userID);
-	
-	//if the record exist with this userID and password it will return user details else will return null
-	
-	if(user !=null)
-	{
-		log.debug("Valid Credentials");
-		user = userDAO.get(userID);
-		session.setAttribute("loggedInUser", user.getName());
-		session.setAttribute("loggedInUser ID", user.getId());
+	@RequestMapping(value = "/user-register", method = RequestMethod.GET) 
+	public String Register(Model model,HttpSession session) { 
+		log.debug("UserController ---> Starting of the Method Register()");
+
+	    model.addAttribute("user", new User()); 
+		model.addAttribute("userclickedRegister","true");
 		
-		session.setAttribute("user", user);
-		
-		if(user.getRole().equals("ROLE_ADMIN"))
-		{
-			log.debug("Logged in as Admin");
-			mv.addObject("isAdmin","true");
-			session.setAttribute("supplier", supplier);
-			session.setAttribute("supplierList", supplierDAO.list());
-			
-			session.setAttribute("category", category);
-			session.setAttribute("categoryList", categoryDAO.list());
-			
-			
-			
-		}
-		else
-		{
-			log.debug("Logged in as User");
-			mv.addObject("isAdmin","false");
-			cart=cartDAO.get(userID);
-			mv.addObject("cart",cart);
-			//Fetch the cart list based on userID
-			 List<cart> cartList = cartDAO.list(userID);
-			 mv.addObject("cartList",cartList);
-			 mv.addObject("cartSize",cartList.size());
-			 
-			
-		}
+		log.debug("UserController ---> Ending of the Method Register()");
+	    return "home"; 
 	}
-	
-	else
+
+	@RequestMapping(value="/userform",method=RequestMethod.POST)
+	public ModelAndView checklogin(@Valid @ModelAttribute User user, BindingResult result,HttpSession session)
 	{
-	log.debug("Invalid Credentials");
-	mv.addObject("invalidCredentials", "true");
-	mv.addObject("errorMessage", "Invalid Credentials");
-	}
-	log.debug("Ending of the method login");
-	return mv;
-	}
-	
-	@RequestMapping("/logout")
-	
-		public ModelAndView logout(HttpServletRequest request)
-		{
-			log.debug("Starting of the method logout");
-			ModelAndView mv= new ModelAndView("/index");
-			session.invalidate();
-			session = request.getSession(true);
-			session.setAttribute("category",category);
-			session.setAttribute("categoryList", categoryDAO.list());
-			
-			mv.addObject("logoutMessage", "You are successfully logged out");
-			mv.addObject("loggedOut", "true");
-			log.debug("Ending of the method logout");
-			return mv;
-					
-			
-		}
-	
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView registerUser(@ModelAttribute User user)
-	{
-		log.debug("Starting of the method registerUser");
-		ModelAndView mv= new ModelAndView("/index");
-		if(userDAO.get(user.getId()) == null)
+		log.debug("UserController ---> Starting of the Method checklogin()");
+		ModelAndView mv = new ModelAndView("home");
+		 mv.addObject("login", new Login()); 
+		 
+		 if(result.hasErrors())
+			{
+				mv.addObject("userclickedRegister","true");
+				log.debug("UserController ---> Ending of the Method checklogin()");
+				return mv;
+			}
+		 else{
+		if(userDAO.get(user.getMail())==null)
 		{
 			user.setRole("ROLE_USER");
-			userDAO.saveOrUpadate(user);
-			log.debug("You are successfully register");
-			mv.addObject("successMessage", "You are successfully registered");
-			
+			userDAO.save(user);
+			mv.addObject("UserRegisterSuccess", "true");
+			mv.addObject("UserRegisterSuccessMessage", "Thank you! Please Login to Avail More Service !!");
+			log.debug("UserController ---> Ending of the Method checklogin()");
+			return mv;
 		}
 		else
 		{
-			log.debug("User exist with this id");
-			mv.addObject("errorMessage", "User exist with this id");
-			
+			mv.addObject("UserRegisterError", "true");
+			mv.addObject("UserRegisterErrorMessage", "Your Email Id Already Exist in our Database!! Please Try with Different Email ID");
+			log.debug("UserController ---> Ending of the Method checklogin()");
+			return mv;
 		}
-		
-		log.debug("Ending of the method registerUser");
-		return mv;
+		 }
 	}
 	
-	@RequestMapping(value = "/loginError", method = RequestMethod.GET)
-	public String loginError(Model model)
-	{
-		log.debug("Starting of the method loginError");
-		model.addAttribute("errorMessage", "Login Error");
-		log.debug("Ending of the method loginError");
-		return "index";
-		
+	@RequestMapping(value = "/cod") 
+	public String Cod(Model model) { 
+ 
+		model.addAttribute("ShowCODPage","true");
+	    return "home"; 
+	}
+	
+	@RequestMapping(value = "/credit_debit") 
+	public String creditdebit(Model model) { 
+ 
+		model.addAttribute("ShowDCPage","true");
+	    return "home"; 
+	}
+	
+	@RequestMapping(value = "/paypal") 
+	public String paypal(Model model) { 
+ 
+		model.addAttribute("ShowpaypalPage","true");
+	    return "home"; 
 	}
 	
 	
-	@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
-	public String accessDenied(Model model)
-	{
-	log.debug("Starting of the method accessDenied");
-	model.addAttribute("errorMessage","you are not authorized to access this page");
-	log.debug("Ending of the method loginError");
-		return "index";
-		
-	}
 }
 
-	

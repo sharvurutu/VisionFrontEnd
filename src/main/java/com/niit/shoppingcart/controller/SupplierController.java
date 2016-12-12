@@ -1,64 +1,134 @@
-/*package com.niit.shoppingcart.controller;
+package com.niit.shoppingcart.controller;
+
+import javax.servlet.http.HttpSession;
+
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.niit.shoppingcart.dao.SupplierDAO;
 import com.niit.shoppingcart.model.Supplier;
 
+
+
 @Controller
 public class SupplierController {
-
-	Logger log = LoggerFactory.getLogger(CategoryController.class);
-	
-	@Autowired
-	private SupplierDAO supplierDAO;
+	public static Logger log = LoggerFactory.getLogger(SupplierController.class.getName());
 
 	@Autowired
-	private Supplier supplier;
+	Supplier supplier;
 	
-	@RequestMapping(value = "/suppliers", method = RequestMethod.GET)
-	public String listSuppliers(Model model) {
+	@Autowired
+	SupplierDAO supplierDAO;
+	
+	
+	
+	@RequestMapping(value="/InsertSupplier",method=RequestMethod.GET)
+	public String ShowInsertSupplier(Model model)
+	{
+		log.debug("SupplierController ---> Starting of the Method ShowInsertSupplier()");
+
+		model.addAttribute("supplier", new Supplier());
 		model.addAttribute("supplier", supplier);
-		model.addAttribute("supplierList", this.supplierDAO.list());
-		return "supplier";
+		model.addAttribute("supplierlist", supplierDAO.list());
+	model.addAttribute("UserClickedInsertSupplier", "true");
+	
+	log.debug("SupplierController ---> Ending of the Method ShowInsertSupplier()");
+	return "home";
+		
 	}
+	
+	
+	@RequestMapping(value="/InsertSupplierform",method=RequestMethod.POST)
+	public ModelAndView ProcessInsertSupplier(@ModelAttribute Supplier supplier)
+	{
+		log.debug("SupplierController ---> Starting of the Method ProcessInsertSupplier()");
 
-	//For add and update supplier both
-		@RequestMapping(value= "/supplier/add", method = RequestMethod.POST)
-		public String addSupplier(@ModelAttribute("supplier") Supplier supplier){
+		ModelAndView mv = new ModelAndView("home");
+		/*supplier.setId(req.getParameter("SupId"));
+		supplier.setName(req.getParameter("SupName"));
+		supplier.setDescription(req.getParameter("SupAdd")) ;*/
+		supplierDAO.save(supplier);
+		mv.addObject("supplier", supplier);
+		mv.addObject("supplierlist", supplierDAO.list());
+		mv.addObject("InsertSupplierSuccess", "Supplier has been SuccessFully Inserted");
 		
-			supplierDAO.saveOrUpdate(supplier);
-			
-			return "redirect:/manageSuppliers";
-			
-		}
+		log.debug("SupplierController ---> Ending of the Method ProcessInsertSupplier()");
+		return mv;
+	}
+	
+	
+	@RequestMapping(value="/DisplayAllSupplier")
+	public ModelAndView ProcessDisplayAllCategory(HttpSession session)
+	{
+		log.debug("SupplierController ---> Starting of the Method ProcessDisplayAllCategory()");
+
+		ModelAndView mv = new ModelAndView("home");
+		/*session.setAttribute("supplier", supplier);
+	session.setAttribute("supplierlist", supplierDAO.list());*/
+	mv.addObject("supplier", supplier);
+	mv.addObject("supplierlist", supplierDAO.list());
+		mv.addObject("ShowingAllSupplier", "show");
 		
-		@RequestMapping("supplier/remove/{id}")
-	    public String removeSupplier(@PathVariable("id") int id,ModelMap model) throws Exception{
+		log.debug("SupplierController ---> Ending of the Method ProcessDisplayAllCategory()");
+		return mv;
+	}
+	
+	@RequestMapping(value="/ModifySupplier")
+	public ModelAndView ShowModifSupplier(@RequestParam("sid")String SupplierId)
+	{
+		log.debug("SupplierController ---> Starting of the Method ShowModifSupplier()");
 
-			supplierDAO.delete(id);
-			model.addAttribute("message","Successfully Added");
+		ModelAndView mv = new ModelAndView("home");
+		supplier = supplierDAO.get(SupplierId);
+		mv.addObject("supplier", supplier);
+		mv.addObject("supplierlist", supplierDAO.list());
+		mv.addObject("AdminClickedModifySupplier", "true");
 
-			return "redirect:/manageSuppliers";
-	    }
-	 
-	    @RequestMapping("supplier/edit/{id}")
-	    public String editSupplier(@PathVariable("id") int id, Model model){
-	    	System.out.println("editSupplier");
-	        model.addAttribute("supplier", this.supplierDAO.get(id));
-	        model.addAttribute("listSuppliers", this.supplierDAO.list());
-	        return "supplier";
-	    }
+		log.debug("SupplierController ---> Ending of the Method ShowModifSupplier()");
+		return mv;
+	}
+	
+	@RequestMapping(value="/ModifySupplierform")
+	public ModelAndView ProcessModifySupplierForm(@ModelAttribute Supplier supplier)
+	{
+		log.debug("SupplierController ---> Starting of the Method ProcessModifySupplierForm()");
+
+		ModelAndView mv = new ModelAndView("home");
+		supplierDAO.udpate(supplier);
+		mv.addObject("supplier", supplier);
+		mv.addObject("supplierlist", supplierDAO.list());
+		mv.addObject("ModifySupplierSuccess", "Thank you Supplier has been Modified !!");
+		
+		log.debug("SupplierController ---> Ending of the Method ProcessModifySupplierForm()");
+		return mv;
+	}
+	
+	
+	
+	@RequestMapping(value="/DeleteSupplier")
+	public ModelAndView ProcessDeleteCategory(@RequestParam("sid") String SupplierId)
+	{
+		log.debug("SupplierController ---> Starting of the Method ProcessDeleteCategory()");
+
+		ModelAndView mv = new ModelAndView("home");
+		supplier = supplierDAO.get(SupplierId);
+		supplierDAO.delete(supplier);
+		mv.addObject("supplier", supplier);
+		mv.addObject("supplierlist", supplierDAO.list());
+		mv.addObject("DeleteSupplierSuccess", "Thank you Supplier has been Deleted !!");
+		
+		log.debug("SupplierController ---> Ending of the Method ProcessDeleteCategory()");
+		return mv;
+	}
+	
+	
 }
-
-*/

@@ -1,42 +1,83 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Insert title here</title>
 </head>
 <body>
-Please login with your credentials
-<br>
-${message}
-<c:url var="action" value="/validate">
-</c:url>
+	<div class="container col-md-8">
+		<form:form method="post" action="validate"
+			class="well form-horizontal" modelAttribute="login">
+			<h2 style="color: #A9A9A9">
+				Login Here
+			</h2>
+			<h1
+				style="background-color:#A9A9A9 ; border-radius: 5px; height: 5px"></h1>
+			<div class="row">
+				<div class="col-md-8">
+					<div class="col-md-offset-4">
 
-<c:url var="action" value="/j_spring_security_check">
-</c:url>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><i
+									class="glyphicon glyphicon-user"></i></span>
+								<form:input type="text" class="form-control input-lg"
+									path="username" name="username" placeholder="Email ID"
+									tabindex="1" required="true" />
+								<font color="RED"><form:errors path="username"></form:errors></font>
 
-<form name="loginForm" action= "${action}" method="post">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 
-<div class ="input-group margin-bottom-sn">
-<span class="input-group-addon">
-<i class="fa fa-envelop-o fa-fw"></i></span>
-<input class="form-control" type="text" name="username" placeholder=User ID">
-</div>
+				<div class="col-md-8">
+					<div class="col-md-offset-4">
 
-<div class="input-group">
-<span class="input-group-addon">
-<i class="fa fa-key fa-fw"></i></span>
-<input class="form-control" type="password" name="password" placeholder="Password">
-</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><i
+									class="glyphicon glyphicon-user"></i></span>
+								<form:input type="password" placeholder="Password"
+									name="password" class="form-control input-lg" tabindex="2"
+									path="password" />
+								<font color="RED"><form:errors path="password"></form:errors></font>
 
-<input type="hidden" name="${_csrf.parameterName}"
-value="${_csrf.token}" /> <input type="submit"
-class="btn btn-default" value="Login">
-</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
+			<div class="row">
+				<div class="col-md-offset-4">
+					<div class="col-md-4">
+						<div class="form-group">
+							<a href=""> <input type="submit"
+								class="btn btn-success btn-block btn-lg" tabindex="8"
+								value="Login">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form:form>
+
+	</div>
 
 
 </body>

@@ -6,7 +6,7 @@
 
 </head>
 <body background="Images/41.jpg">
-
+<center><h1>VISION</h1></center>
 <center><br><br>
 <p>
 <B>WE ARE PHOTOGRAPHERS....PHOTOGRAPHERS WHO LOVE PHOTOGRAPHY</B><br>

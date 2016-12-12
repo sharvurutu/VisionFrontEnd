@@ -1,15 +1,27 @@
-package com.niit.shoppingcart.webflow;
+/*package com.niit.shoppingcart.webflow;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.niit.shoppingcart.controller.UserController;
+import com.niit.shoppingcart.model.Billingaddress;
 import com.niit.shoppingcart.model.Order;
 import com.niit.shoppingcart.model.Product;
+import com.niit.shoppingcart.model.Shippingaddress;
 
 public class OrderWebflow {
+	
+	public static Logger log = LoggerFactory.getLogger(OrderWebflow.class);
+	
+	
 	@Autowired
-	BillingAdreess billingAddress;
+	Billingaddress billingaddress;
+	
+	@Autowired
+	Shippingaddress shippingaddress;
 	
 	@Autowired
 	Order order;
@@ -29,20 +41,20 @@ public class OrderWebflow {
 		return order;
 	}
 	
-	public String addShippingAddress (Order order, ShippingAddress shippingAddress)
+	public String addShippingAddress (Order order, Shippingaddress shippingaddress)
         {
 			log.debug("WEBFLOW->-> starting of the method addShippingAddress");
-			order.setShippingAddress(shippingAddress);
+			order.setShippingAddress(shippingaddress);
 		
 			log.debug("WEBFLOW->-> ending of the method addShippingAddress");
 			return "success";
 			
 		}
 	
-	public String addBillingAddress (Order order, BillingAddress billingAddress)
+	public String addBillingAddress (Order order, Billingaddress billingaddress)
     {
 		log.debug("WEBFLOW->-> starting of the method addBillingAddress");
-		order.setShippingAddress(billingAddress);
+		order.setBillingaddress(billingaddress);
 	
 		log.debug("WEBFLOW->-> ending of the method addBillingAddress");
 		return "success";
@@ -63,3 +75,4 @@ public class OrderWebflow {
 	
 	
 }
+*/

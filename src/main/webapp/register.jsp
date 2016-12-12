@@ -1,60 +1,134 @@
+<html>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 
-<div class="container">
- 
-  <form class="form-horizontal" action="registerHere" method="post">
- <fieldset>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="name">Name</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name="name" placeholder="Enter User Id">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="password">Password:</label>
-      <div class="col-sm-10">          
-        <input type="password" class="form-control" name="password" placeholder="Enter password">
-      </div>
-    </div>
-     <div class="form-group">
-      <label class="control-label col-sm-2" for="contact">Contact:</label>
-      <div class="col-sm-10">          
-        <input type="number" class="form-control" name="contact" placeholder="Enter number">
-      </div>
-    </div>
-     <div class="form-group">
-      <label class="control-label col-sm-2" for="address">Address:</label>
-      <div class="col-sm-10">          
-        <input type="text" class="form-control" name="address" placeholder="Enter address">
-      </div>
-    </div>
-     <div class="form-group">
-      <label class="control-label col-sm-2" for="mail">Mail:</label>
-      <div class="col-sm-10">          
-        <input type="email" class="form-control" name="email" placeholder="Enter mail">
-      </div>
-    </div>
-    
-    <div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Register</button>
-      </div>
-    </div>
-    
-     <div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="reset" class="btn btn-default">Reset</button>
-      </div>
-    </div>
-    </fieldset>
-  </form>
-</div>
+<body>
+	<div class="container col-md-8" align="center">
+		<form:form method="post" action="userform"
+			class="well form-horizontal" modelAttribute="user">
+			<h2 style="color: #A9A9A9">
+				 Sign up
+			</h2>
+			<h1
+				style="background-color: #A9A9A9; border-radius: 5px; height: 5px"></h1>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon"> <i
+								class="glyphicon glyphicon-user"></i></span>
+							<form:input type="text" name="name" id="name"
+								placeholder="First Name" path="name"
+								class="form-control input-lg" tabindex="1" />
+							<font color="RED"><form:errors path="name"></form:errors></font>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon"> <i
+								class="glyphicon glyphicon-user"></i></span>
+							<form:input type="text" name="last_name" placeholder="Last Name"
+								path="last_name" class="form-control input-lg" tabindex="2" />
+							<font color="RED"><form:errors path="last_name"></form:errors></font>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon"><i
+								class="glyphicon glyphicon-envelope"></i></span>
+							<form:input type="mail" name="mail_id" id="mail-id"
+								class="form-control input-lg" path="mail" placeholder="Mail Id"
+								tabindex="3" />
+							<font color="RED"><form:errors path="mail"></form:errors></font>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon"> <i
+								class="glyphicon glyphicon-earphone"></i>
+							</span>
+							<form:input type="text" name="contact" id="contact"
+								placeholder="Mobile Number" path="contact"
+								class="form-control input-lg" tabindex="4" />
+							<font color="RED"><form:errors path="contact"></form:errors></font>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<form:input type="password" name="password" id="password"
+							placeholder="Password" path="password"
+							class="form-control input-lg" tabindex="5" />
+						<font color="RED"><form:errors path="password"></form:errors></font>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<form:input type="password" name="confirm-password"
+							id="confirm-password" path="ConfirmPassword"
+							placeholder="Confirm Password" class="form-control input-lg"
+							tabindex="6" />
+						<font color="RED"><form:errors path="ConfirmPassword"></form:errors></font>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<!-- <div class="col-md-6">
+					By clicking <strong class="label label-primary">Register</strong>,
+					you agree to the Terms and Conditions
+				</div> -->
+			</div>
+			<h1
+				style="background-color: #A9A9A9; border-radius: 5px; height: 5px"></h1>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary btn-block btn-lg"
+							tabindex="7" value="Register" onclick="return validate()">
+
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<input type="reset" class="btn btn-primary btn-block btn-lg"
+							tabindex="7" value="Reset">
+					</div>
+				</div>
+
+			</div>
+		</form:form>
+
+	</div>
+
 
 </body>
 </html>
-
-
-
-
-
-

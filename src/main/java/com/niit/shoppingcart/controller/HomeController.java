@@ -1,101 +1,116 @@
 package com.niit.shoppingcart.controller;
 
+import javax.servlet.http.HttpSession;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.niit.shoppingcart.dao.CartDAO;
 import com.niit.shoppingcart.dao.CategoryDAO;
-import com.niit.shoppingcart.dao.SupplierDAO;
-import com.niit.shoppingcart.dao.UserDAO;
-import com.niit.shoppingcart.model.Cart;
+import com.niit.shoppingcart.dao.ContactusDAO;
+import com.niit.shoppingcart.dao.ProductDAO;
 import com.niit.shoppingcart.model.Category;
+import com.niit.shoppingcart.model.Contactus;
 import com.niit.shoppingcart.model.Product;
-import com.niit.shoppingcart.model.Supplier;
-import com.niit.shoppingcart.model.User;
+
+
+
 
 @Controller
 public class HomeController {
+	public static Logger log = LoggerFactory.getLogger(HomeController.class.getName());
 
-	Logger log = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
-	User user;
-	
-	@Autowired
-	Supplier supplier;
-	
-	@Autowired
-	Cart cart;
-	
-	@Autowired
-	CartDAO cartDAO;
-	
-	@Autowired
-	SupplierDAO supplierDAO;
+	Category category;
 
 	@Autowired
 	CategoryDAO categoryDAO;
 
 	@Autowired
-	UserDAO userDAO;
+	Product product;
 
 	@Autowired
-	Category category;
-
-
-@Autowired
-private Product product;
-
-@RequestMapping("/")
-public ModelAndView onLoad(HttpSession session)
-{
-log.debug("Starting of the method onLoad");
- 
-ModelAndView mv = new ModelAndView("/index");
-session.setAttribute("category", category);
-session.setAttribute("product", product);
-session.setAttribute("supplier", supplier);
-
-session.setAttribute("categoryList", categoryDAO.list());
-session.setAttribute("supplierList", supplierDAO.list());
-
-log.debug("Ending of the method onLoad");
-return mv;
-
-}
-
-@RequestMapping("/registerHere")
-public ModelAndView registerHere()
-{
-	log.debug("Starting of the method registerHere");
-	ModelAndView mv = new ModelAndView("/index");
-	mv.addObject("user", user);
-	mv.addObject("isUserClickedRegisterHere","true");
-	log.debug("Ending of the method registerHere");
-	return mv;
+	ProductDAO productDAO;
 	
-}
+	@Autowired
+	ContactusDAO contactusDAO;
 
-@RequestMapping("/loginHere")
-public ModelAndView loginHere()
-{
-	log.debug("Starting of the method loginHere");
-	System.out.println("loginHere");
-	ModelAndView mv = new ModelAndView("/index");
-	mv.addObject("user", user);
-	mv.addObject("isUserClickedLoginHere","true");
-	log.debug("Ending of the method loginHere");
-	return mv;
+
 	
-}
-}
+	
+	
+	
 
+	@RequestMapping(value = "/contact-us",method = RequestMethod.GET)
+	public String contactus(Model model) {
+		log.debug("HelloController ---> Starting of the Method Contactus()");
+		model.addAttribute("userclickedcontact", "true");
+		model.addAttribute("contactus", new Contactus());
+		log.debug("HelloController --->Ending of the Method Contactus()");
+		return "home";
+	}
+	
+	@RequestMapping(value="/SubmitContactUsForm")
+	public ModelAndView SubmitContactUsForm(@ModelAttribute Contactus contactus)
+	{
+		ModelAndView mv = new ModelAndView("home");
+	contactusDAO.save(contactus);
+		mv.addObject("ContactSubmitted", "Thankyou for Showing Interest on us. One of Our employee will definately contact you ");
+		
+		return mv;
+	}
+	
+	
+	@RequestMapping({"/","/home"})
+	public ModelAndView index(HttpSession session) {
+		log.debug("HelloController ---> Starting of the Method Index()");
+		ModelAndView mv = new ModelAndView("/home");
+		session.setAttribute("category", category);
+		session.setAttribute("product", product);
+		System.out.println(category.getProducts());
+		session.setAttribute("categorylist", categoryDAO.list());
+		mv.addObject("ShowCarousel", "true");
+		System.out.println("Index method");
+		log.debug("HelloController --->Ending of the Method Index()");
+		return mv;
+	}
+
+	
+	@RequestMapping(value = "/about-us")
+	public String aboutus(Model model) {
+		log.debug("HelloController ---> Starting of the Method Aboutus()");
+		model.addAttribute("userclickedAbout", "true");
+		
+		log.debug("HelloController --->Ending of the Method Aboutus()");
+		return "home";
+	}
+/*
+	@RequestMapping(value = "/demo")
+	public String demo(Model model) {
+		model.addAttribute("userclickedDemo", "true");
+		return "home";
+	}*/
+	
+	@RequestMapping(value="/accessdenied")
+	public String accessDenied(Model model)
+	{
+		log.debug("HelloController ---> Starting of the Method accessDenied()");
+		model.addAttribute("AccessDenied", "You Are not Authorized to Access this Page");
+		model.addAttribute("accessdenied", "true");
+		log.debug("HelloController ---> Ending of the Method accessDenied()");
+		return "home";
+	}
+	
+	
+	
+	
+	}
