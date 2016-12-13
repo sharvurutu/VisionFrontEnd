@@ -117,8 +117,7 @@ public class ProductController {
 		System.out.println(product.getName());
 		file=product.getImage();
 		
-/*		FileUtil.Upload("D:\\DT NIIT\\yamahaonline\\ProductImages", file, product.getId()+".jpg");
-*/		
+		
 		FileUtil.Upload(path, file, product.getId()+".jpg");
 
 		productDAO.save(product);

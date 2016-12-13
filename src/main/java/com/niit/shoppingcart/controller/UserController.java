@@ -67,8 +67,7 @@ public class UserController {
 			user.setRole("ROLE_USER");
 			userDAO.save(user);
 			mv.addObject("UserRegisterSuccess", "true");
-			mv.addObject("UserRegisterSuccessMessage", "Thank you! Please Login to Avail More Service !!");
-			log.debug("UserController ---> Ending of the Method checklogin()");
+			mv.addObject("UserRegisterSuccessMessage", "Thank you! Please Login to Avail More Service !!");			log.debug("UserController ---> Ending of the Method checklogin()");
 			return mv;
 		}
 		else

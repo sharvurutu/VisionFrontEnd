@@ -56,23 +56,23 @@ public class LoginController {
 
 	@RequestMapping(value = "/showloginform", method = RequestMethod.GET) 
 	public String showLoginForm(Model model,HttpSession session) { 
-		log.debug("LoginController ---> Starting of the Method showLoginForm()");
+		log.debug("LoginController = Starting of the Method showLoginForm()");
 	    model.addAttribute("login", new Login()); 
 	    session.setAttribute("user", new Login());
 		model.addAttribute("userclickedlogin","true");
-		log.debug("LoginController ---> Ending of the Method showLoginForm()");
+		log.debug("LoginController = Ending of the Method showLoginForm()");
 	    return "home"; 
 	}
 	
 	@RequestMapping(value="/validate" ,method=RequestMethod.POST )
 	public ModelAndView checklogin(HttpServletRequest request,HttpServletResponse res,HttpSession session,@Valid @ModelAttribute("login")Login login, BindingResult result)
 	{
-		log.debug("LoginController ---> Starting of the Method checklogin()");
+		log.debug("LoginController = Starting of the Method checklogin()");
 		if(result.hasErrors())
 		{
 			ModelAndView mv = new ModelAndView("home");
 			mv.addObject("userclickedlogin","true");
-			log.debug("LoginController ---> Ending of the Method checklogin()");
+			log.debug("LoginController = Ending of the Method checklogin()");
 			return mv;
 		}
 		else{
@@ -92,7 +92,7 @@ public class LoginController {
 		session.setAttribute("name", username);
 		mv.addObject("ShowCarousel", "True");
 	session.setAttribute("UserLoginSuccessMessage", "Welcome");
-	log.debug("LoginController ---> Ending of the Method checklogin()");
+	log.debug("LoginController = Ending of the Method checklogin()");
 
 	return mv;
 	}
@@ -102,7 +102,7 @@ public class LoginController {
 			boolean showadmin = true;
 			session.setAttribute("ShowAdminForm", showadmin);
 			mv.addObject("AdminSuccessMessage", "You are Logged in Admin");
-			log.debug("LoginController ---> Ending of the Method checklogin()");
+			log.debug("LoginController = Ending of the Method checklogin()");
 
 			return mv;
 		}
@@ -111,7 +111,7 @@ public class LoginController {
 	else
 	{
 		mv.addObject("UserLoginErrorMessage", "Invalid Credentials,., Please login again");
-		log.debug("LoginController ---> Ending of the Method checklogin()");
+		log.debug("LoginController = Ending of the Method checklogin()");
 
 	return mv;
 	}	
@@ -123,7 +123,7 @@ public class LoginController {
 	@RequestMapping(value="/logout")
 	public ModelAndView logout(HttpSession session,HttpServletRequest request)
 	{
-		log.debug("LoginController ---> Starting of the Method logout()");
+		log.debug("LoginController = Starting of the Method logout()");
 ModelAndView mv = new ModelAndView("home");
 		session.invalidate();
 		session=request.getSession(true);
@@ -133,7 +133,7 @@ ModelAndView mv = new ModelAndView("home");
 		session.setAttribute("categorylist", categoryDAO.list());
 		mv.addObject("logOutMessage", "You are Successfully Logged Out");
 		mv.addObject("logout", "true");
-		log.debug("LoginController ---> Ending of the Method logout()");
+		log.debug("LoginController = Ending of the Method logout()");
 	return mv;
 	}
 	

@@ -13,7 +13,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Login</title>
 </head>
 <body>
 	<div class="container col-md-8">
@@ -33,9 +33,9 @@
 								<span class="input-group-addon"><i
 									class="glyphicon glyphicon-user"></i></span>
 								<form:input type="text" class="form-control input-lg"
-									path="username" name="username" placeholder="Email ID"
+									path="username" name="username" placeholder="username"
 									tabindex="1" required="true" />
-								<font color="RED"><form:errors path="username"></form:errors></font>
+								<font color="grey"><form:errors path="username"></form:errors></font>
 
 							</div>
 						</div>

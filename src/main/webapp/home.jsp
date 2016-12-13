@@ -13,15 +13,15 @@
 		<h1>VISION</h1>
 		<p>A camera is a tool for learning how to see without a camera.</p>
 	</div> -->
-	
+
 
 	<jsp:include page="navbar.jsp"></jsp:include><br>
 	<br>
 	<br>
-	<%-- <jsp:include page="category.jsp"></jsp:include>
-	<jsp:include page="product.jsp"></jsp:include>
-	 --%>
-	<jsp:include page="carousel.jsp"></jsp:include>
+	<%-- <jsp:include page="category.jsp"></jsp:include> --%>
+	<%-- <jsp:include page="product.jsp"></jsp:include> --%>
+
+	<%-- <jsp:include page="carousel.jsp"></jsp:include> --%>
 
 	${SuccessMesssage} ${ErrorMesssage}
 

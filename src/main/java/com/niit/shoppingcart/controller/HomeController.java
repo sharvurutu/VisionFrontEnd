@@ -50,12 +50,12 @@ public class HomeController {
 	
 	
 
-	@RequestMapping(value = "/contact-us",method = RequestMethod.GET)
+	@RequestMapping(value = "/contactus",method = RequestMethod.GET)
 	public String contactus(Model model) {
-		log.debug("HelloController ---> Starting of the Method Contactus()");
+		log.debug("HomeController = Starting of the Method Contactus()");
 		model.addAttribute("userclickedcontact", "true");
 		model.addAttribute("contactus", new Contactus());
-		log.debug("HelloController --->Ending of the Method Contactus()");
+		log.debug("HomeController = Ending of the Method Contactus()");
 		return "home";
 	}
 	
@@ -72,7 +72,7 @@ public class HomeController {
 	
 	@RequestMapping({"/","/home"})
 	public ModelAndView index(HttpSession session) {
-		log.debug("HelloController ---> Starting of the Method Index()");
+		log.debug("HomeController = Starting of the Method Index()");
 		ModelAndView mv = new ModelAndView("/home");
 		session.setAttribute("category", category);
 		session.setAttribute("product", product);
@@ -80,33 +80,27 @@ public class HomeController {
 		session.setAttribute("categorylist", categoryDAO.list());
 		mv.addObject("ShowCarousel", "true");
 		System.out.println("Index method");
-		log.debug("HelloController --->Ending of the Method Index()");
+		log.debug("HomeController = Ending of the Method Index()");
 		return mv;
 	}
 
 	
-	@RequestMapping(value = "/about-us")
+	@RequestMapping(value = "/aboutus")
 	public String aboutus(Model model) {
-		log.debug("HelloController ---> Starting of the Method Aboutus()");
+		log.debug("HomeController = Starting of the Method Aboutus()");
 		model.addAttribute("userclickedAbout", "true");
 		
-		log.debug("HelloController --->Ending of the Method Aboutus()");
+		log.debug("HomeController = Ending of the Method Aboutus()");
 		return "home";
 	}
-/*
-	@RequestMapping(value = "/demo")
-	public String demo(Model model) {
-		model.addAttribute("userclickedDemo", "true");
-		return "home";
-	}*/
 	
 	@RequestMapping(value="/accessdenied")
 	public String accessDenied(Model model)
 	{
-		log.debug("HelloController ---> Starting of the Method accessDenied()");
+		log.debug("HomeController = Starting of the Method accessDenied()");
 		model.addAttribute("AccessDenied", "You Are not Authorized to Access this Page");
 		model.addAttribute("accessdenied", "true");
-		log.debug("HelloController ---> Ending of the Method accessDenied()");
+		log.debug("HomeController = Ending of the Method accessDenied()");
 		return "home";
 	}
 	
